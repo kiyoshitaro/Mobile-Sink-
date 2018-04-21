@@ -4,11 +4,8 @@
 import java.util.*;
 import java.lang.*;
 import java.io.*;
- 
-class Graph
-{
-    // A class to represent a graph edge
-    class Edge implements Comparable<Edge>
+
+class Edge implements Comparable<Edge>
     {
         int src, dest, weight;
  
@@ -19,12 +16,18 @@ class Graph
             return this.weight-compareEdge.weight;
         }
     };
- 
-    // A class to represent a subset for union-find
+
     class subset
     {
         int parent, rank;
-    };
+    }; 
+class Graph
+{
+    // A class to represent a graph edge
+    
+ 
+    // A class to represent a subset for union-find
+    
  
     int V, E;    // V-> no. of vertices & E->no.of edges
     Edge edge[]; // collection of all edges
