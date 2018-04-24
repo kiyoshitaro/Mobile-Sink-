@@ -5,18 +5,13 @@ import java.lang.*;
 class Point{
     double x ;
     double y ;
-    double r = 2.1;
+    double r = 13;
     int pos ;
     public Point(){}
         
     public Point(double x, double y){
       this.x = x;
       this.y = y;
-    }
-    public Point(double x, double y, int pos){
-        this.x = x;
-        this.y = y;
-        this.pos = pos;
     }
 }
 class HCG{
@@ -59,6 +54,7 @@ class HCG{
                 val=i;
                 }
             }
+        System.out.println("\n Điểm gần nhất với (" + p1.x +" , " + p1.y +" ) là : (" + m[val].x + " , "+ m[val].y + " ) ==> thuộc nhóm " + val );
         return val;
     }
     void cal_mean() 
@@ -76,8 +72,13 @@ class HCG{
             m[i].y = m[i].y/k[i].size() ;
             // System.out.println(m[i].x + "         " + i) ;
         }
+        System.out.println("\nCác điểm mean mới là : ");
+        for (int i =0 ; i< p ; ++i){
+            System.out.println("\n (" + m[i].x +" , " + m[i].y + " )");
+        }
+
     }
-    int check1() {
+    int check() {
         for(int i=0;i<p;++i){
             for(int j=0;j<k[i].size();j++){
                 if(tempk[i].get(j).x != k[i].get(j).x && tempk[i].get(j).y != k[i].get(j).y)
@@ -90,15 +91,12 @@ class HCG{
     void Kmean(){
         p = p < d.size() ? p : d.size();
         System.out.println(
-            ":::::::::::" + d.size()
+            "Mảng d còn " + d.size() + " phần tử khi bắt đầu cluster"
             );
         for(int i=0;i<p;++i){
             m[i].x=d.get(i).x;
             m[i].y=d.get(i).y; 
-            // m[i].x=i;
-            // m[i].y=i; 
             }
-            // int temp=0;
         int flag=0;
         Point tmp = new Point(0,0);
         for(int i=0;i<p;++i){
@@ -116,24 +114,19 @@ class HCG{
                 k[cal_diff(d.get(i))].add(d.get(i));
             } 
                 // add cac phan tu vao nhom co mean gan nhat
-            // for (int i =0 ; i< p ; i ++){
-            //     for (int j =0 ; j< k[i].size();j++){
-            //         System.out.println(k[i].get(j).x + " --------- "+ k[i].get(j).y + "  ------  " + i);
-            //     }
-            // }
-            // test
             cal_mean(); 
-            flag=check1(); 
+            flag=check(); 
             // System.out.println("flag = "+ flag);
             if(flag!=1){
                 for(int i=0;i<p;++i){
                     tempk[i] = k[i];
                 }
-            } // dung bien tempk de kiem tra xem 2 phan loai lien tiep co trung nhau khong 
+            } 
+            // dung bien tempk de kiem tra xem 2 phan loai lien tiep co trung nhau khong 
             // de dung thuat toan
         }
         while(flag==0);
-        System.out.println("\n\n\nThe Final Clusters By Kmeans are as follows: ");
+        System.out.println("\n\n\n Clustering bằng Kmeans ta được : ");
         for(int i=0;i<p;++i){
             System.out.print("K"+(i+1)+"{ ");
             for(int j=0; j<this.k[i].size();++j)
@@ -152,21 +145,14 @@ class HCG{
         return center;
     }
     // m - mean , d - diem xa mean nhat
-    void decreaseIndex(int pos){
-        System.out.println(pos + "==:==");
-
-        for (int i =pos ; i< d.size(); ++i){
-            d.get(i).pos --;
-            System.out.println(d.get(i).pos + "======");
-        }
-    }
 // giam cac index sau khi da remove mot phan tu trong d 
     void greedy(){
         while(d.size() != 0 ){
-            System.out.println(d.size() + "---in");
+            System.out.println("\t=> Lặp");            
+            System.out.println("\n\tMảng vào vòng lặp  có : " + d.size() + " phần tử ");
             this.Kmean();
             for (int i =0 ;i< p && k[i].size() != 0;++i){
-                System.out.println(i+ "''''''''''''" + k[i].size());
+                System.out.println("\t\tNhóm " +i+ " có " + k[i].size() + " phần tử");
                 double tmp = 0;
                 int val = 0;
                 for(int j=0;j<k[i].size();++j){
@@ -174,69 +160,73 @@ class HCG{
                         tmp = distance(k[i].get(j),m[i]);
                         val = j;
                     }
+                System.out.println("\n\t\tĐiểm " + "(" +k[i].get(val).x + "," + k[i].get(val).y + ") xa tâm nhất");
                 }
                 // val la index diem xa nhat voi tam
-                System.out.println(val+"````````````" + k[i].get(val).pos+ "s" + d.size());
                 Point center = findCenter(m[i],k[i].get(val));
-                d.remove(k[i].get(val).pos);
-                this.decreaseIndex(k[i].get(val).pos);
+                // d.remove(k[i].get(val).pos);
+                // this.decreaseIndex(k[i].get(val).pos);
+                // d.remove(val);
                 res.add(center);
-                for (int j=0 ; j< k[i].size() ; ++j){
-                    System.out.println(k[i].get(j).x + "----"+ k[i].get(j).y );
-                    if(distance(k[i].get(j),center) - center.r < -0.000001){
-                        System.out.println(
-                            // k[i].get(j).pos + 
-                              "+++++++++" + i
-                            + "+++++++++" + j
-                            + "+++++++++" + d.size() 
-                            // + "---------" + center.r 
-                            + "+++++++++" + center.x
-                            + "+++++++++" + center.y
-                            + "+++++++++" + (distance(k[i].get(j),center) - center.r)
-                            + "+++++++++" + k[i].get(j).pos
+                System.out.println(
+                    // k[i].get(j).pos + 
+                      "\n\t\tXét nhóm : " + i
+                      + "\n\t\tTìm được tâm là : "
+                      + " (" + center.x + " , " + center.y + ")"
+                      );
+                for (int j =0 ; j< d.size(); ++j){
+                    System.out.print(
+                        "\n\t\t\tMảng gốc còn : " + d.size() 
+                        + "\n\t\t\tXét phần tử  thứ " + j + " của mảng : "
+                        + "\n\t\t\tCó tọa độ (" + d.get(j).x + " , " + d.get(j).y+ ")"
+                        // + "\nTọa độ tâm: (" + center.x + " , " + center.y + ")"
+                        + "\n\t\t\tKhoảng điểm đó đến tâm = " + (distance(d.get(j),center))
+                    );
+                    if(distance(d.get(j),center) - center.r < 0.0000001){
+                                 System.out.print(
+                            " <= "+ center.r +  " => Loại \n\n"
                             );
-                        d.remove(k[i].get(j).pos);
-                        this.decreaseIndex(k[i].get(j).pos);
+                        d.remove(j);
+                        j --;
                     }
-                    else {
-                        System.out.println(
-                            // k[i].get(j).pos + 
-                              "+++++++++" + i
-                            + "+++++++++" + j
-                            + "+++++++++" + d.size() 
-                            // + "---------" + center.r 
-                            + "+++++++++" + center.x
-                            + "+++++++++" + center.y
-                            + "+++++++++" + (distance(k[i].get(j),center) - center.r)
-                            + "+++++++++" + k[i].get(j).pos
-                            );
+                    else{
+                        System.out.print(" > " + center.r +" => Không loại \n\n");
                     }
                 }
-                System.out.println(d.size() + "=''=");
-                // remove nhung diem trong vong tron
+        
+                System.out.println("\n\t\tKích thước mảng d sau khi xét cluster " + i + " là " + d.size());
             }
-            System.out.println(d.size() + "--out");
+            System.out.println("\n\tMảng ra vòng lặp  còn : " + d.size() + " phần tử ");
         }
+        System.out.println("\t => Ngừng lặp");            
+
     }
 
     public static void main(String args[]){
-        int P = 2;
-        int N = 8;
+        int P = 3;
+        int N = 10;
         HCG hcg =  new HCG(N,P) ;
-        for (int i=0; i< 4 ;++i){
-            Point c = new Point(i,i,i);
-            hcg.d.add(c);
-        }
-        for (int i=0; i< 4 ;++i){
-            Point c = new Point(1000-i,1000-i,7-i);
-            hcg.d.add(c);
-        }
+       
+        hcg.d.add(new Point(1,1));
+        hcg.d.add(new Point(3,3));
+        hcg.d.add(new Point(10,10));
+        hcg.d.add(new Point(233,235));
+        hcg.d.add(new Point(236,234));
+        hcg.d.add(new Point(237,233));
+        hcg.d.add(new Point(999,999));
+        hcg.d.add(new Point(997,997));
+        hcg.d.add(new Point(990,997));
+        hcg.d.add(new Point(989,990));
         // hcg.Kmean();
         hcg.greedy();
    
 
+        System.out.println(
+            "\n Có " + hcg.res.size() + " node cần tìm là : ");
         for (int i =0 ; i< hcg.res.size(); ++i){
-            System.out.println(hcg.res.get(i).x + "--------" + hcg.res.get(i).y+"-------" + hcg.res.size());
+            System.out.println(
+                "( " +  hcg.res.get(i).x +" , "+ hcg.res.get(i).y + " )"
+            );
         }
     }
 }
