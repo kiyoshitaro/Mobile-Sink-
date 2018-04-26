@@ -5,7 +5,7 @@ import java.lang.*;
 class Point{
     double x ;
     double y ;
-    double r = 13;
+    double r = 10;
     int pos ;
     public Point(){}
         
@@ -15,25 +15,25 @@ class Point{
     }
 }
 class HCG{
-    LinkedList<Point> d;
-    LinkedList<Point> res;
-    LinkedList<Point> k[] ; // mang cac group- p phan tu
-    LinkedList<Point> tempk[];
+	ArrayList<Point> d;
+    ArrayList<Point> res;
+    ArrayList<Point> k[] ; // mang cac group- p phan tu
+    ArrayList<Point> tempk[];
     Point m[]; // mang cac diem mean- p phan tu
     double diff[];
     int n,p;
     HCG(int n, int p){
         this.n = n;
         this.p = p < n ? p : n;
-        k = new LinkedList[p];
-        tempk = new LinkedList[p];
+        k = new ArrayList[p];
+        tempk = new ArrayList[p];
         m = new Point[p];
         diff = new double[n];
-        d = new LinkedList<>();
-        res = new LinkedList<>();
+        d = new ArrayList<>();
+        res = new ArrayList<>();
         for (int i=0; i<p;i++){
-            k[i] = new LinkedList<>();
-            tempk[i] = new LinkedList<>();
+            k[i] = new ArrayList<>();
+            tempk[i] = new ArrayList<>();
             m[i] = new Point();
         }
     }
@@ -203,23 +203,27 @@ class HCG{
     }
 
     public static void main(String args[]){
-        int P = 3;
+        int P = 2;
         int N = 10;
         HCG hcg =  new HCG(N,P) ;
        
         hcg.d.add(new Point(1,1));
         hcg.d.add(new Point(3,3));
         hcg.d.add(new Point(10,10));
-        hcg.d.add(new Point(233,235));
-        hcg.d.add(new Point(236,234));
-        hcg.d.add(new Point(237,233));
+        hcg.d.add(new Point(33,23));
+        hcg.d.add(new Point(26,34));
+        hcg.d.add(new Point(27,23));
         hcg.d.add(new Point(999,999));
         hcg.d.add(new Point(997,997));
         hcg.d.add(new Point(990,997));
         hcg.d.add(new Point(989,990));
         // hcg.Kmean();
+        long startTime = System.nanoTime();
         hcg.greedy();
-   
+        long endTime   = System.nanoTime();
+        long totalTime = endTime - startTime;
+        
+        System.out.println(totalTime/1000000000.0);
 
         System.out.println(
             "\n Có " + hcg.res.size() + " node cần tìm là : ");
